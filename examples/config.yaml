@@ -1,0 +1,47 @@
+# Example configuration against https://books.toscrape.com (a scraping sandbox).
+#
+#   cmon validate examples/config.yaml
+#   cmon run      examples/config.yaml --once        # first run = baseline, no alerts
+#   cmon history  examples/config.yaml --watch light-in-the-attic-price --last 20
+#   cmon export   examples/config.yaml --csv history.csv
+#
+# Secrets are never written here: notifier options reference environment
+# variables (see deploy/.env.example).
+
+database: data/monitor.db        # relative to this file; ignored by git
+user_agent: "change-monitor/0.1 (+https://github.com/Feldwebelkuchen/change-monitor)"
+timeout: 15
+interval: 0                      # default seconds between checks per watch (0 = every run)
+failures_before_alert: 3         # consecutive failed checks before a "watch failing" alert
+
+notifiers:
+  console:
+    type: stdout
+  # telegram:                    # token/chat id from TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID
+  #   type: telegram
+  # mail:                        # SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, MAIL_FROM, MAIL_TO
+  #   type: email
+  # hook:
+  #   type: webhook
+  #   url: ${WEBHOOK_URL}
+  #   header_Authorization: "Bearer ${WEBHOOK_TOKEN}"
+
+watches:
+  - name: light-in-the-attic-price
+    url: https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html
+    selector: ".product_main .price_color"
+    number: { decimal: "." }     # "£51.77" -> 51.77
+    condition: { below: 50 }     # alert when the price drops below 50
+    notify: [console]
+
+  - name: light-in-the-attic-stock
+    url: https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html
+    selector: ".product_main .availability"
+    regex: "\\((\\d+) available\\)"   # "In stock (22 available)" -> "22"
+    condition: { below: 5 }
+    interval: 3600               # at most once per hour, even if runs are more frequent
+
+  - name: tipping-the-velvet-availability
+    url: https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html
+    selector: ".product_main .availability"
+    condition: any_change        # any change of the text ("In stock (20 available)")

@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+
+# Runtime data and secrets
+data/
+*.db
+*.db-journal
+*.sqlite
+.env
+history*.csv
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

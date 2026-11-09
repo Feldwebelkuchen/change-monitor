@@ -1,0 +1,17 @@
+# systemd --user timer: run change-monitor.service every 15 minutes.
+#
+#   systemctl --user enable --now change-monitor.timer
+#   systemctl --user list-timers change-monitor.timer
+#   journalctl --user -u change-monitor.service -n 50
+
+[Unit]
+Description=Run change-monitor periodically
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+RandomizedDelaySec=60
+Persistent=true
+
+[Install]
+WantedBy=timers.target

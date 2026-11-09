@@ -1,0 +1,27 @@
+# systemd --user unit: one monitoring pass. Triggered by change-monitor.timer.
+#
+# Install (as the user that owns the checkout):
+#   mkdir -p ~/.config/systemd/user
+#   cp deploy/change-monitor.service deploy/change-monitor.timer ~/.config/systemd/user/
+#   cp deploy/.env.example ~/change-monitor/.env && chmod 600 ~/change-monitor/.env   # fill in secrets
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now change-monitor.timer
+#   loginctl enable-linger $USER        # keep user services running without an open session
+#
+# Adjust the three paths below (checkout, config, .env) to your machine.
+
+[Unit]
+Description=change-monitor: check watched web pages once
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/change-monitor
+EnvironmentFile=-%h/change-monitor/.env
+ExecStart=%h/change-monitor/.venv/bin/cmon run %h/change-monitor/config.yaml --once -q
+# Hardening (optional but recommended)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=%h/change-monitor/data

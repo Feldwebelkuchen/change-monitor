@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "change-monitor"
+version = "0.1.0"
+description = "Watch prices, stock status or text on web pages and get alerted via Telegram, e-mail or webhook when they change."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Fynn" }]
+keywords = ["monitoring", "price-tracker", "web-scraping", "alerts", "telegram", "sqlite"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "httpx>=0.25",
+    "selectolax>=0.3",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+cmon = "change_monitor.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Feldwebelkuchen/change-monitor"
+Repository = "https://github.com/Feldwebelkuchen/change-monitor"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
