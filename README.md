@@ -2,6 +2,8 @@
 
 Watch a price, a stock status or any text on a web page and get a Telegram message, an e-mail or a webhook call the moment it changes - with a full history in SQLite.
 
+> **Need this done for you?** I deliver custom monitoring setups, scrapers and automations as a service – order on Fiverr: https://www.fiverr.com/feldwebelkuchen
+
 ```
 $ cmon run examples/config.yaml --once
 watch                            outcome   value                    note
